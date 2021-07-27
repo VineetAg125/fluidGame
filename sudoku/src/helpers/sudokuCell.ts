@@ -52,6 +52,7 @@ export class SudokuCell implements sudoku.Cell {
         this.value = value;
         this.color = color;
     }
+    fixed: boolean;
 
     public toString(): string {
         return `SudokuCell: ${JSON.stringify(this)}`;
