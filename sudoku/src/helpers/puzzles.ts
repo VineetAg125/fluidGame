@@ -16,7 +16,7 @@ import {wordfind} from '../../public/wordfind'
 /**
  * An array of numbers 0-9 for convenient looping when building Sudoku grids.
  */
-export const PUZZLE_INDEXES = Array.from(Array(5).keys());
+export const PUZZLE_INDEXES = Array.from(Array(10).keys());
 
 export const PUZZLES = [
     [
@@ -68,8 +68,8 @@ export function loadPuzzle(index: number, puzzleMap: ISharedMap, solutionMap: IS
             // Start a basic word game without customization !
             const puzzleInput = wordfind.newPuzzle(words, {
                 // Set dimensions of the puzzle
-                height: 5,
-                width:  5,
+                height: 10,
+                width:  10,
                 // or enable all with => orientations: wordfind.validOrientations,
                 orientations: ['horizontal', 'vertical'],
                 // Set a random character the empty spaces
