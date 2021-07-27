@@ -43,7 +43,27 @@ export function SudokuView(props: ISudokuViewProps): JSX.Element {
     };
 
     const checkInput = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        window.alert(checkUserInput(userInput, props.puzzle, props.sol));
+        if(checkUserInput(userInput, props.puzzle, props.sol)){
+
+            var start = userInput.split(":")[0];
+            var startRow = start.split(",")[1];
+            var startCol = start.split(",")[0];
+
+            var end = userInput.split(":")[1]
+            var endRow = end.split(",")[1];
+            var endCol = end.split(",")[0];
+        
+            var i,j;
+
+            for (i = startRow; i<=endRow;i++) {
+                for (j = startCol; j<=endCol;j++) {
+                    const key = Coordinate.asString(i, j);          
+                    const toSet = props.puzzle.get<SudokuCell>(key);
+                    toSet.color = "fixed";
+                    props.puzzle.set(key, toSet);
+                }
+            }
+        }
     };
 
     const loadPuzzle2 = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

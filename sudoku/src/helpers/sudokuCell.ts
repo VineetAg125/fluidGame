@@ -50,6 +50,7 @@ export class SudokuCell implements sudoku.Cell {
         SudokuCell.setIsCorrect(this);*/
 
         this.value = value;
+        this.color = color;
     }
 
     public toString(): string {
@@ -87,7 +88,7 @@ export class SudokuCell implements sudoku.Cell {
         }
 
         if (cell.color == "fixed") {
-            return CellState.fixed;
+            return CellState.wrong;
         }
         return CellState.correct;
     }
