@@ -109,6 +109,12 @@
     --sudoku-input-border-color: #a4262c;
 }
 
+.yellow {
+    --sudoku-input-bg: #e7e699;
+    --sudoku-input-fg: #a3a24f;
+    --sudoku-input-border-color: #a3a24f;
+}
+
 .sudoku-reset {
     flex-grow: 1;
 }

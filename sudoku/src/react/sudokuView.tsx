@@ -6,7 +6,7 @@
 import { ISharedMap } from "@fluidframework/map";
 import React from "react";
 import { Coordinate, CoordinateString } from "../helpers/coordinate";
-import { loadPuzzle, checkUserInput, PUZZLE_INDEXES } from "../helpers/puzzles";
+import { loadPuzzle, checkUserInput, getColor, PUZZLE_INDEXES } from "../helpers/puzzles";
 import { CellState, SudokuCell } from "../helpers/sudokuCell";
 
 /**
@@ -17,6 +17,8 @@ export interface ISudokuViewProps {
     sol: ISharedMap;
     clientId: string;
     clientPresence?: ISharedMap;
+    clientColorMap: ISharedMap;
+    counterMap: ISharedMap;
     setPresence?(cellCoord: CoordinateString, reset: boolean): void;
 }
 
@@ -43,6 +45,7 @@ export function SudokuView(props: ISudokuViewProps): JSX.Element {
     };
 
     const checkInput = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        
         if(checkUserInput(userInput, props.puzzle, props.sol)){
 
             var start = userInput.split(":")[0];
@@ -54,12 +57,23 @@ export function SudokuView(props: ISudokuViewProps): JSX.Element {
             var endCol = end.split(",")[0];
         
             var i,j;
+            var color;
+            if(props.clientColorMap.get(props.clientId) == undefined){
+
+                const count = props.counterMap.get<number>("current")+1;
+                color = getColor(count);
+                props.clientColorMap.set(props.clientId, color);      
+                props.counterMap.set("current", count);        
+            }
+            else{
+                color = props.clientColorMap.get(props.clientId);
+            }
 
             for (i = startRow; i<=endRow;i++) {
                 for (j = startCol; j<=endCol;j++) {
                     const key = Coordinate.asString(i, j);          
                     const toSet = props.puzzle.get<SudokuCell>(key);
-                    toSet.color = "fixed";
+                    toSet.color = color;
                     props.puzzle.set(key, toSet);
                 }
             }
@@ -288,6 +302,9 @@ function SimpleTable(props: ISudokuViewProps) {
                         break;
                     case CellState.wrong:
                         inputClasses = `sudoku-input wrong`;
+                        break;
+                    case CellState.yellow:
+                        inputClasses = `sudoku-input yellow`;
                         break;
                     default:
                         inputClasses = `sudoku-input`;

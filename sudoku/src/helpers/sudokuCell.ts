@@ -11,6 +11,7 @@ export enum CellState {
     fixed = "fixed",
     wrong = "wrong",
     correct = "correct",
+    yellow = "yellow"
 }
 
 /**
@@ -89,8 +90,14 @@ export class SudokuCell implements sudoku.Cell {
         }
 
         if (cell.color == "fixed") {
-            return CellState.wrong;
+            return CellState.fixed;
         }
-        return CellState.correct;
+        if (cell.color == "green") {
+            return CellState.correct;
+        }
+        if (cell.color == "yellow") {
+            return CellState.yellow;
+        }
+        return CellState.wrong;
     }
 }

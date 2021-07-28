@@ -15,6 +15,8 @@ import { SudokuView } from "./react/sudokuView";
 // eslint-disable-next-line import/no-unassigned-import
 import "./helpers/styles.css";
 
+
+
 /**
  * A collaborative Sudoku component built on the Fluid Framework.
  */
@@ -42,10 +44,15 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
     private domElement: HTMLElement | undefined;
     private readonly sudokuMapKey = "sudoku-map";
     private readonly solMapKey = "sol-map";
+    private readonly colorMapKey = "color-map";
+    private readonly counterKey = "counter";
     private puzzle: ISharedMap | undefined;
+    private colorMap: ISharedMap | undefined;
     private solution: ISharedMap | undefined;
+    private counter: ISharedMap | undefined;
     private readonly presenceMapKey = "clientPresence";
     private clientPresence: ISharedMap | undefined;
+    
 
     /**
      * ComponentInitializingFirstTime is where you do setup for your component. This is only called once the first time
@@ -56,13 +63,20 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
         // Create a new map for our Sudoku data
         const map = SharedMap.create(this.runtime);
         const solMap = SharedMap.create(this.runtime);
+        const colorMap = SharedMap.create(this.runtime);
+        const counter = SharedMap.create(this.runtime);
+       
 
         // Populate it with some puzzle data
         loadPuzzle(0, map, solMap);
+        counter.set("current", 0);
+        colorMap.set("not connected", "fixed");
 
         // Store the new map under the sudokuMapKey key in the root SharedDirectory
         this.root.set(this.sudokuMapKey, map.handle);
         this.root.set(this.solMapKey, solMap.handle);
+        this.root.set(this.colorMapKey, colorMap.handle);
+        this.root.set(this.counterKey, counter.handle);
 
         // Create a SharedMap to store presence data
         const clientPresence = SharedMap.create(this.runtime);
@@ -82,6 +96,8 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
         // handle.
         this.puzzle = await this.root.get<IFluidHandle<ISharedMap>>(this.sudokuMapKey).get();
         this.solution = await this.root.get<IFluidHandle<ISharedMap>>(this.solMapKey).get();
+        this.colorMap = await this.root.get<IFluidHandle<ISharedMap>>(this.colorMapKey).get();
+        this.counter = await this.root.get<IFluidHandle<ISharedMap>>(this.counterKey).get();
 
         // Since we're using a Fluid distributed data structure to store our Sudoku data, we need to render whenever a
         // value in our map changes. Recall that distributed data structures can be changed by both local and remote
@@ -113,6 +129,8 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
                         clientPresence={this.clientPresence}
                         clientId={this.runtime.clientId ?? "not connected"}
                         setPresence={this.presenceSetter}
+                        clientColorMap={this.colorMap}
+                        counterMap={this.counter}
                     />
                 );
             } else {

@@ -43,6 +43,12 @@ export const PUZZLES = [
     ],
 ];
 
+var constColorMap = new Map([
+    [1, "green"],
+    [2, "red"],
+    [3, "yellow"]
+]);
+
 /**
  * Loads a puzzle into an ISharedMap.
  *
@@ -53,12 +59,18 @@ export const PUZZLES = [
 
 export function checkUserInput(input: string, puzzleMap: ISharedMap, solutionMap: ISharedMap): boolean{
 
-    if(solutionMap.get(input) != "undefined"){
+    if(solutionMap.get(input) != undefined){
 
         return true;
     }
     return false;
 }
+
+export function getColor(input: number): string{
+
+    return constColorMap.get(input);
+}
+
 export function loadPuzzle(index: number, puzzleMap: ISharedMap, solutionMap: ISharedMap): number[][] {
     //const puzzleInput = PUZZLES[index];
     //const solution = sudoku.solve(puzzleInput);
