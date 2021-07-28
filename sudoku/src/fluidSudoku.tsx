@@ -65,7 +65,6 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
         const solMap = SharedMap.create(this.runtime);
         const colorMap = SharedMap.create(this.runtime);
         const counter = SharedMap.create(this.runtime);
-       
 
         // Populate it with some puzzle data
         loadPuzzle(0, map, solMap);
@@ -105,7 +104,7 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
         this.puzzle.on("valueChanged", (changed, local, op) => {
             this.render();
         });
-
+        
         this.clientPresence = await this.root
             .get<IFluidHandle<ISharedMap>>(this.presenceMapKey)
             .get();
@@ -131,6 +130,9 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
                         setPresence={this.presenceSetter}
                         clientColorMap={this.colorMap}
                         counterMap={this.counter}
+                        playerName = ""
+                        startCoord = ""
+                        endCoord = ""
                     />
                 );
             } else {
