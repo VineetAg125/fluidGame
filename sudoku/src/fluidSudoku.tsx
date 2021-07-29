@@ -45,6 +45,7 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
     private readonly sudokuMapKey = "sudoku-map";
     private readonly solMapKey = "sol-map";
     private readonly colorMapKey = "color-map";
+    private readonly clientScoreKey = "score-map";
     private readonly counterKey = "counter";
     private puzzle: ISharedMap | undefined;
     private colorMap: ISharedMap | undefined;
@@ -52,6 +53,7 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
     private counter: ISharedMap | undefined;
     private readonly presenceMapKey = "clientPresence";
     private clientPresence: ISharedMap | undefined;
+    private clientScoreMap: ISharedMap | undefined;
     
 
     /**
@@ -65,17 +67,21 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
         const solMap = SharedMap.create(this.runtime);
         const colorMap = SharedMap.create(this.runtime);
         const counter = SharedMap.create(this.runtime);
+        const score = SharedMap.create(this.runtime);
 
         // Populate it with some puzzle data
-        loadPuzzle(0, map, solMap);
         counter.set("current", 0);
         colorMap.set("not connected", "fixed");
+        
+        loadPuzzle(0, map, solMap, colorMap, counter);
+        
 
         // Store the new map under the sudokuMapKey key in the root SharedDirectory
         this.root.set(this.sudokuMapKey, map.handle);
         this.root.set(this.solMapKey, solMap.handle);
         this.root.set(this.colorMapKey, colorMap.handle);
         this.root.set(this.counterKey, counter.handle);
+        this.root.set(this.clientScoreKey, score.handle);
 
         // Create a SharedMap to store presence data
         const clientPresence = SharedMap.create(this.runtime);
@@ -97,6 +103,7 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
         this.solution = await this.root.get<IFluidHandle<ISharedMap>>(this.solMapKey).get();
         this.colorMap = await this.root.get<IFluidHandle<ISharedMap>>(this.colorMapKey).get();
         this.counter = await this.root.get<IFluidHandle<ISharedMap>>(this.counterKey).get();
+        this.clientScoreMap = await this.root.get<IFluidHandle<ISharedMap>>(this.clientScoreKey).get();
 
         // Since we're using a Fluid distributed data structure to store our Sudoku data, we need to render whenever a
         // value in our map changes. Recall that distributed data structures can be changed by both local and remote
@@ -133,6 +140,7 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
                         playerName = ""
                         startCoord = ""
                         endCoord = ""
+                        clientScoreMap={this.clientScoreMap}
                     />
                 );
             } else {
@@ -163,4 +171,5 @@ export class FluidSudoku extends DataObject implements IFluidHTMLView {
             }
         }
     };
+    
 }

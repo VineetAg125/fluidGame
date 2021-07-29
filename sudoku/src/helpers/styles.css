@@ -97,22 +97,28 @@
     color: var(--fg);
 }
 
-.correct {
+.green {
     --sudoku-input-bg: #9bf49b;
     --sudoku-input-fg: #073d07;
     --sudoku-input-border-color: #0b6a0b;
+    background-color: #9bf49b;
+    color: #073d07;
 }
 
-.wrong {
+.red {
     --sudoku-input-bg: #e7999d;
     --sudoku-input-fg: #a4262c;
     --sudoku-input-border-color: #a4262c;
+    background-color: #e7999d;
+    color: #2c0204;
 }
 
 .yellow {
     --sudoku-input-bg: #e7e699;
     --sudoku-input-fg: #a3a24f;
     --sudoku-input-border-color: #a3a24f;
+    background-color: #e7e699;
+    color: #0e0d01;
 }
 
 .sudoku-reset {

@@ -49,6 +49,21 @@ var constColorMap = new Map([
     [3, "yellow"]
 ]);
 
+export var playerName = "";
+
+export function setPlayerName(input: string, clientColorMap: ISharedMap, counterMap: ISharedMap){
+
+    playerName = input;
+    if(clientColorMap.get(playerName) == undefined){
+
+        var count = counterMap.get<number>("current");
+        count += 1;
+        var color = getColor(count);
+        clientColorMap.set(playerName, color);      
+        counterMap.set("current", count);        
+    }
+}
+
 /**
  * Loads a puzzle into an ISharedMap.
  *
@@ -71,11 +86,14 @@ export function getColor(input: number): string{
     return constColorMap.get(input);
 }
 
-export function loadPuzzle(index: number, puzzleMap: ISharedMap, solutionMap: ISharedMap): number[][] {
+export function loadPuzzle(index: number, puzzleMap: ISharedMap, solutionMap: ISharedMap, clientColorMap: ISharedMap, counterMap: ISharedMap): number[][] {
     //const puzzleInput = PUZZLES[index];
     //const solution = sudoku.solve(puzzleInput);
 
-    var words = ['cow','rat','apple'];
+    playerName = window.prompt('Enter your user name')
+    setPlayerName(playerName, clientColorMap, counterMap);
+
+    var words = ['cow','rat','horse','dog','tiger', 'lion', 'goat'];
 
             // Start a basic word game without customization !
             const puzzleInput = wordfind.newPuzzle(words, {

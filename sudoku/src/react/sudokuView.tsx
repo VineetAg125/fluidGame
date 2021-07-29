@@ -6,7 +6,7 @@
 import { ISharedMap } from "@fluidframework/map";
 import React from "react";
 import { Coordinate, CoordinateString } from "../helpers/coordinate";
-import { checkUserInput, getColor, PUZZLE_INDEXES } from "../helpers/puzzles";
+import { checkUserInput, playerName, PUZZLE_INDEXES } from "../helpers/puzzles";
 import { CellState, SudokuCell } from "../helpers/sudokuCell";
 
 /**
@@ -22,6 +22,7 @@ export interface ISudokuViewProps {
     playerName: String;
     startCoord: String;
     endCoord: String;
+    clientScoreMap: ISharedMap;
     setPresence?(cellCoord: CoordinateString, reset: boolean): void;
 }
 
@@ -32,27 +33,29 @@ export interface ISudokuViewProps {
 export function SudokuView(props: ISudokuViewProps): JSX.Element {
     
     const [theme, setTheme] = React.useState("default");
-    const [playerName, setPlayerName] = React.useState("default");
+    //const [playerName, setPlayerName] = React.useState("default");
 
+    /*
     const handleResetButton = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         props.puzzle.forEach((value: SudokuCell, key: CoordinateString) => {
-            /*if (!value.fixed && value.value !== 0) {
+            if (!value.fixed && value.value !== 0) {
                 value.value = 0;
                 props.puzzle.set(key, value);
-            }*/
+            }
             props.puzzle.set(key, value);
         });
     };
+    */
 
-    const [userInput, setUserInput] = React.useState("default");
+    //const [userInput, setUserInput] = React.useState("default");
 
     // const loadPuzzle1 = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     //     loadPuzzle(0, props.puzzle, props.sol);
     // };
 
-    let textInput:React.RefObject<HTMLInputElement> = React.createRef();
+    //let textInput:React.RefObject<HTMLInputElement> = React.createRef();
 
-    const checkInput = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    /*const checkInput = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
         if(checkUserInput(userInput, props.puzzle, props.sol)){
 
@@ -86,28 +89,34 @@ export function SudokuView(props: ISudokuViewProps): JSX.Element {
                 }
             }
         }
-    };
+    };*/
 
     // const loadPuzzle2 = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     //     loadPuzzle(1, props.puzzle, props.sol);
     // };
 
     return (
-        <div className={`sudoku ${theme}`}>
-            <label>Please Enter your name:  
-            </label>
-            <input ref={textInput} type="text">
-            </input>
-            <button type="button"
-                onClick={buttonClick}
-            >Submit</button>
+        <div className={`sudoku ${theme}`} style={{minHeight: "100%", marginLeft: "38%"}}>
+            <div className={`${props.clientColorMap.get(playerName)}`}>
+                    <label><b>{playerName==""?"No players at this moment":{playerName}+" is playing!"}</b></label> 
+                    </div>
+                    <br/>
+                    <label htmlFor="score"><b>Score: </b></label>   
+                    <label id="score"><b>{props.clientScoreMap.get(playerName) == undefined?0:props.clientScoreMap.get(playerName)}</b></label> 
+                    <br/>
+                    {/* <span className="sudoku-load">
+                        Load:
+                        <button onClick={loadPuzzle1}>Puzzle 1</button>
+                        <button onClick={loadPuzzle2}>Puzzle 2</button>
+                    </span> */}
             <br/>
-            <br/>
-            <br/>
-            <div className="sudoku-wrapper">
+            {
+                <div className="sudoku-wrapper">
                 <SimpleTable {...props} />
-                <div className="sudoku-buttons">
-                    <span className="sudoku-theme-select">
+                
+            </div>
+            }
+            <span className="sudoku-theme-select">
                         <label htmlFor="theme-select">Theme: </label>
                         <select
                             value={theme}
@@ -121,45 +130,18 @@ export function SudokuView(props: ISudokuViewProps): JSX.Element {
                                 Dark Theme
                             </option>
                         </select>
-                    </span>
-                    <br/>
-                    <span className="sudoku-input">
-                        <label htmlFor="user-input">Input: </label>
-                        <input
-                            type="text"
-                            value={userInput}
-                            onChange={onInputChange}
-                        />
-                        <button onClick={checkInput}>Go!</button>
-                    </span>
-                    <br/>
-                    <span className="sudoku-reset">
-                        <button onClick={handleResetButton}>Reset</button>
-                    </span>
-
-                    {/* <span className="sudoku-load">
-                        Load:
-                        <button onClick={loadPuzzle1}>Puzzle 1</button>
-                        <button onClick={loadPuzzle2}>Puzzle 2</button>
-                    </span> */}
-                </div>
-            </div>
+                    </span>            
         </div>
     );
-
-    function buttonClick(e: any) {
-        alert("Player Entered the game Successfully");
-        setPlayerName(textInput.current.value);
-    }
 
     function onThemeChange(e: any) {
         setTheme(e.target.value);
     }
 
-    function onInputChange(e:any){
+    /*function onInputChange(e:any){
         console.log(e.target.value);
         setUserInput(e.target.value);
-    }
+    }*/
 }
 
 function SimpleTable(props: ISudokuViewProps) {
@@ -167,7 +149,7 @@ function SimpleTable(props: ISudokuViewProps) {
     const coordinateDataAttributeName = "cellcoordinate";
 
     const [startCoord,setStartCoordinate] = React.useState("default");
-    const [endCoord,setEndCoordinate] = React.useState("default");
+    //const [endCoord,setEndCoordinate] = React.useState("default");
 
     const getCellInputElement = (coord: CoordinateString): HTMLInputElement =>
         document.getElementById(`${props.clientId}-${coord}`) as HTMLInputElement;
@@ -202,7 +184,7 @@ function SimpleTable(props: ISudokuViewProps) {
     };*/
 
     const handleDragStart = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        console.log("Rohan");
+        //window.log("Rohan");
         let coord = e.currentTarget.dataset[coordinateDataAttributeName] as string;
         console.log(coord);
         setStartCoordinate(coord);
@@ -212,9 +194,9 @@ function SimpleTable(props: ISudokuViewProps) {
 
         let coord = e.currentTarget.dataset[coordinateDataAttributeName] as string;
         console.log(coord);
-        setEndCoordinate(coord);
-        console.log(startCoord+" + "+" "+endCoord);
-        const userInput= startCoord+":"+endCoord;
+        //setEndCoordinate(coord);
+        console.log(startCoord+" + "+" "+coord);
+        const userInput= startCoord+":"+coord;
         if(checkUserInput(userInput, props.puzzle, props.sol)){
 
             var start = userInput.split(":")[0];
@@ -227,15 +209,15 @@ function SimpleTable(props: ISudokuViewProps) {
         
             var i,j;
             var color;
-            if(props.clientColorMap.get(props.clientId) == undefined){
+            color = props.clientColorMap.get(playerName);
 
-                const count = props.counterMap.get<number>("current")+1;
-                color = getColor(count);
-                props.clientColorMap.set(props.clientId, color);      
-                props.counterMap.set("current", count);        
+            if(props.clientScoreMap.get(playerName) == undefined){
+
+                props.clientScoreMap.set(playerName, 1);       
             }
             else{
-                color = props.clientColorMap.get(props.clientId);
+                var count = props.clientScoreMap.get(playerName);
+                props.clientScoreMap.set(playerName, count+1);   
             }
 
             for (i = startRow; i<=endRow;i++) {
@@ -372,10 +354,10 @@ function SimpleTable(props: ISudokuViewProps) {
                 let inputClasses: string;
                 switch (state) {
                     case CellState.correct:
-                        inputClasses = `sudoku-input correct`;
+                        inputClasses = `sudoku-input green`;
                         break;
                     case CellState.wrong:
-                        inputClasses = `sudoku-input wrong`;
+                        inputClasses = `sudoku-input red`;
                         break;
                     case CellState.yellow:
                         inputClasses = `sudoku-input yellow`;
