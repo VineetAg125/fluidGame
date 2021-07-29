@@ -99,14 +99,14 @@ export function loadPuzzle(index: number, puzzleMap: ISharedMap, solutionMap: IS
     var i:number; 
 
     for (i = 0; i<solution.found.length;i++) {
-        const key = Coordinate.asString(solution.found[i].x, solution.found[i].y);
+        const key = Coordinate.asString(solution.found[i].y, solution.found[i].x);
         var value;
 
         if(solution.found[i].orientation == "vertical"){
-            value = Coordinate.asString(solution.found[i].x, solution.found[i].y+solution.found[i].overlap-1);
+            value = Coordinate.asString(solution.found[i].y+solution.found[i].overlap-1, solution.found[i].x);
         }
         else{
-            value = Coordinate.asString(solution.found[i].x+solution.found[i].overlap-1, solution.found[i].y); 
+            value = Coordinate.asString(solution.found[i].y, solution.found[i].x+solution.found[i].overlap-1); 
         }
         console.log(key);
         console.log(value);

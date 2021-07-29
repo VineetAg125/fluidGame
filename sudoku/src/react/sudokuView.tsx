@@ -214,6 +214,39 @@ function SimpleTable(props: ISudokuViewProps) {
         console.log(coord);
         setEndCoordinate(coord);
         console.log(startCoord+" + "+" "+endCoord);
+        const userInput= startCoord+":"+endCoord;
+        if(checkUserInput(userInput, props.puzzle, props.sol)){
+
+            var start = userInput.split(":")[0];
+            var startRow = start.split(",")[0];
+            var startCol = start.split(",")[1];
+
+            var end = userInput.split(":")[1]
+            var endRow = end.split(",")[0];
+            var endCol = end.split(",")[1];
+        
+            var i,j;
+            var color;
+            if(props.clientColorMap.get(props.clientId) == undefined){
+
+                const count = props.counterMap.get<number>("current")+1;
+                color = getColor(count);
+                props.clientColorMap.set(props.clientId, color);      
+                props.counterMap.set("current", count);        
+            }
+            else{
+                color = props.clientColorMap.get(props.clientId);
+            }
+
+            for (i = startRow; i<=endRow;i++) {
+                for (j = startCol; j<=endCol;j++) {
+                    const key = Coordinate.asString(i, j);          
+                    const toSet = props.puzzle.get<SudokuCell>(key);
+                    toSet.color = color;
+                    props.puzzle.set(key, toSet);
+                }
+            }
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
